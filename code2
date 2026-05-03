@@ -1,0 +1,110 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+/*
+   Comprehensive C++ Example:
+   - Classes (OOP)
+   - Inheritance
+   - STL (vector, map, algorithm)
+   - File handling
+   - Sorting & searching
+*/
+
+class Student {
+protected:
+    string name;
+    int id;
+    vector<int> marks;
+
+public:
+    Student(string n, int i) : name(n), id(i) {}
+
+    void addMark(int m) {
+        marks.push_back(m);
+    }
+
+    double getAverage() const {
+        if (marks.empty()) return 0.0;
+        int sum = accumulate(marks.begin(), marks.end(), 0);
+        return (double)sum / marks.size();
+    }
+
+    virtual void display() const {
+        cout << "ID: " << id << ", Name: " << name;
+        cout << ", Avg Marks: " << getAverage() << endl;
+    }
+
+    int getId() const { return id; }
+};
+
+class GraduateStudent : public Student {
+    string thesis;
+
+public:
+    GraduateStudent(string n, int i, string t)
+        : Student(n, i), thesis(t) {}
+
+    void display() const override {
+        Student::display();
+        cout << "Thesis: " << thesis << endl;
+    }
+};
+
+// Utility: search student by ID
+Student* findStudent(vector<Student*>& students, int id) {
+    for (auto s : students) {
+        if (s->getId() == id) return s;
+    }
+    return nullptr;
+}
+
+int main() {
+    vector<Student*> students;
+
+    // Create students
+    Student* s1 = new Student("Alice", 101);
+    s1->addMark(85);
+    s1->addMark(90);
+
+    GraduateStudent* s2 = new GraduateStudent("Bob", 102, "AI Research");
+    s2->addMark(88);
+    s2->addMark(92);
+
+    students.push_back(s1);
+    students.push_back(s2);
+
+    // Sort by average marks (descending)
+    sort(students.begin(), students.end(), [](Student* a, Student* b) {
+        return a->getAverage() > b->getAverage();
+    });
+
+    cout << "=== Student List ===" << endl;
+    for (auto s : students) {
+        s->display();
+        cout << "------------------" << endl;
+    }
+
+    // Search example
+    int searchId = 102;
+    Student* found = findStudent(students, searchId);
+    if (found) {
+        cout << "Found student with ID " << searchId << ":" << endl;
+        found->display();
+    } else {
+        cout << "Student not found." << endl;
+    }
+
+    // File output
+    ofstream outFile("students.txt");
+    for (auto s : students) {
+        outFile << s->getId() << " " << endl;
+    }
+    outFile.close();
+
+    // Cleanup
+    for (auto s : students) {
+        delete s;
+    }
+
+    return 0;
+}
