@@ -1,0 +1,68 @@
+#include<iostream>
+#include<conio.h>
+#include<windows.h>
+using namespace std;
+
+int bird=10,score=0;
+int pipeX=40,gapY=8;
+
+void draw()
+{
+    system("cls");
+
+    for(int i=0;i<20;i++)
+    {
+        for(int j=0;j<50;j++)
+        {
+            if(i==bird && j==5)
+                cout<<"@";              // Bird
+            else if(j==pipeX && (i<gapY || i>gapY+4))
+                cout<<"|";              // Pipe
+            else
+                cout<<" ";
+        }
+        cout<<"\n";
+    }
+    cout<<"Score: "<<score<<"\n";
+}
+
+int main()
+{
+    while(1)
+    {
+        draw();
+
+        if(kbhit())
+        {
+            char ch=getch();
+            if(ch==' ')
+                bird-=2;   // Jump
+        }
+
+        bird++;            // Gravity
+        pipeX--;
+
+        if(pipeX==0)
+        {
+            pipeX=40;
+            gapY=rand()%12;
+            score++;
+        }
+
+        if(bird<0 || bird>19)
+        {
+            cout<<"\nGame Over!";
+            break;
+        }
+
+        if(pipeX==5 && (bird<gapY || bird>gapY+4))
+        {
+            cout<<"\nGame Over!";
+            break;
+        }
+
+        Sleep(100);
+    }
+
+    return 0;
+}
