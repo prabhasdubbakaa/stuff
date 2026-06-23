@@ -1,0 +1,45 @@
+#include<iostream.h>
+#include<conio.h>
+
+int q[20],f=0,r=-1,v[20],a[20][20],n;
+
+void bfs(int s)
+{
+    int i;
+    q[++r]=s;
+    v[s]=1;
+
+    while(f<=r)
+    {
+        s=q[f++];
+        cout<<s<<" ";
+
+        for(i=1;i<=n;i++)
+            if(a[s][i] && !v[i])
+            {
+                q[++r]=i;
+                v[i]=1;
+            }
+    }
+}
+
+void main()
+{
+    int i,j,s;
+    clrscr();
+
+    cout<<"Enter no. of vertices: ";
+    cin>>n;
+
+    cout<<"Enter adjacency matrix:\n";
+    for(i=1;i<=n;i++)
+        for(j=1;j<=n;j++)
+            cin>>a[i][j];
+
+    cout<<"Start vertex: ";
+    cin>>s;
+
+    bfs(s);
+
+    getch();
+}
